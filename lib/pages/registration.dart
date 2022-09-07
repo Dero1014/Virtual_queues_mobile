@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:noq/classes/custom.dart';
+import '../customWidgets/customWidget.dart';
 
 class Registartion extends StatefulWidget {
   const Registartion({Key? key}) : super(key: key);
@@ -9,6 +13,7 @@ class Registartion extends StatefulWidget {
 }
 
 class _RegistartionState extends State<Registartion> {
+  var visibility = false;
   @override
   Widget build(BuildContext context) {
     var username = TextEditingController();
@@ -25,67 +30,44 @@ class _RegistartionState extends State<Registartion> {
         backgroundColor: Colors.amber[800],
       ),
       body: Column(children: [
-        TextField(
-          controller: username,
-          decoration: InputDecoration(
-              hintText: "Username",
-              border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  //Clear text from input
-                  username.clear();
-                },
-                icon: const Icon(Icons.clear),
-              )),
-        ),
-        TextField(
-          controller: email,
-          decoration: InputDecoration(
-              hintText: "Email",
-              border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  //Clear text from input
-                  email.clear();
-                },
-                icon: const Icon(Icons.clear),
-              )),
-        ),
-        TextField(
-          controller: password,
-          decoration: InputDecoration(
-              hintText: "password",
-              border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  //Clear text from input
-                  password.clear();
-                },
-                icon: const Icon(Icons.clear),
-              )),
-        ),
+        TextWidget(username, "Username", false),
+        TextWidget(email, "Email", false),
+        TextWidget(password, "Password", true),
         ElevatedButton(
             onPressed: () async {
-              var uri = Uri.parse(
-                  "https://noq.ddns.net/includes/registration.inc.php");
+              var cf = new CustomFunctions();
+              var uri =
+                  Uri.parse("https://noq.ddns.net/mobile/registration.mob.php");
               var response = await post(uri, body: {
-                'submitReg': 'submited',
-                'regUserName': username.text,
-                'regUserEmail': email.text,
-                'regUserPass': password.text,
+                'registerUser': 'submited',
+                'uName': username.text,
+                'uEmail': email.text,
+                'uPass': password.text,
               });
-              print("sent");
               print(response.body);
+              String json = cf.resolveJson(response.body, 0);
+              Map map = jsonDecode(json);
 
-              if (response.body.contains("registration success")) {
+              if (map["register"] == "success") {
+                setState(() {
+                  visibility = true;
+                });
                 print("registered user");
+              } else {
+                setState(() {
+                  visibility = false;
+                });
               }
 
               username.clear();
               email.clear();
               password.clear();
             },
-            child: Text("Signup"))
+            child: Text("Signup")),
+        Visibility(
+          visible: true,
+          child: Text("Signed up!"),
+        ),
       ]),
     );
   }
