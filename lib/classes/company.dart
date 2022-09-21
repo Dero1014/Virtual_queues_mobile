@@ -79,7 +79,7 @@ class Service {
   }
 
   int getServiceAverageTime() {
-    return sId;
+    return avgTime;
   }
 
   String getServiceName() {

@@ -55,10 +55,14 @@ class _QueuePageState extends State<QueuePage> {
       setState(() {
         widget.user.setMyPosition(map["position"]);
         widget.service.setAverageTime(map["averageTime"]);
+        print(map["averageTime"]);
       });
     } else {
       Navigator.pushReplacementNamed(context, '/user', arguments: widget.user);
     }
+    print(widget.service.getServiceAverageTime().toString() +
+        " and " +
+        widget.user.getUserPosition().toString());
 
     if (map["myTurn"] == 1) {
       widget.user.setMyTurn(1);
@@ -75,7 +79,6 @@ class _QueuePageState extends State<QueuePage> {
         (widget.service.getServiceAverageTime() * widget.user.getUserPosition())
             .toString() +
         " mins";
-
     if (widget.user.getUserTurn() == 1) {
       setState(() {
         positionText = "You are up!";
@@ -89,41 +92,45 @@ class _QueuePageState extends State<QueuePage> {
         title: Text("Queue for " + widget.service.getServiceName()),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Text(
-            positionText,
-          ),
-          Text(
-            timeText,
-          ),
-          Visibility(
-            visible: visibility,
-            child: ElevatedButton(
-              onPressed: () async {
-                var cf = CustomFunctions();
-                var uri =
-                    Uri.parse("https://noq.ddns.net/mobile/queuedrop.mob.php");
-                var response = await post(uri, body: {
-                  'queueDrop': 'submited',
-                  'cName': widget.company.getCompanyName(),
-                  'sName': widget.service.getServiceName(),
-                  'uId': widget.user.getUserId().toString()
-                });
-                print(response.body);
-
-                String json = cf.resolveJson(response.body, 0);
-                Map map = jsonDecode(json);
-
-                if (map["drop"] == true) {
-                  Navigator.pushReplacementNamed(context, '/user',
-                      arguments: widget.user);
-                }
-              },
-              child: Text("Drop"),
+      body: Center(
+        child: Column(
+          children: [
+            Text(
+              positionText,
+              style: TextStyle(fontSize: 24),
             ),
-          )
-        ],
+            Text(
+              timeText,
+              style: TextStyle(fontSize: 24),
+            ),
+            Visibility(
+              visible: visibility,
+              child: ElevatedButton(
+                onPressed: () async {
+                  var cf = CustomFunctions();
+                  var uri = Uri.parse(
+                      "https://noq.ddns.net/mobile/queuedrop.mob.php");
+                  var response = await post(uri, body: {
+                    'queueDrop': 'submited',
+                    'cName': widget.company.getCompanyName(),
+                    'sName': widget.service.getServiceName(),
+                    'uId': widget.user.getUserId().toString()
+                  });
+                  print(response.body);
+
+                  String json = cf.resolveJson(response.body, 0);
+                  Map map = jsonDecode(json);
+
+                  if (map["drop"] == true) {
+                    Navigator.pushReplacementNamed(context, '/user',
+                        arguments: widget.user);
+                  }
+                },
+                child: Text("Drop"),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
