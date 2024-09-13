@@ -26,7 +26,6 @@ class _QueuePageState extends State<QueuePage> {
   @override
   void initState() {
     super.initState();
-    print("Queue start...");
     widget.user.queueUp(widget.company, widget.service);
     timer = Timer.periodic(
         Duration(milliseconds: 500), (Timer t) => getQueueInfo());
@@ -39,7 +38,6 @@ class _QueuePageState extends State<QueuePage> {
   }
 
   void getQueueInfo() async {
-    print("Fetch queue data...");
     var cf = CustomFunctions();
     var uri = Uri.parse("https://noq.ddns.net/mobile/queuedata.mob.php");
     var response = await post(uri, body: {
@@ -48,21 +46,16 @@ class _QueuePageState extends State<QueuePage> {
       'sName': widget.service.getServiceName(),
       'uId': widget.user.getUserId().toString(),
     });
-    print(response.body);
     String json = cf.resolveJson(response.body, 0);
     Map map = jsonDecode(json);
     if (map["inQueue"] == true) {
       setState(() {
         widget.user.setMyPosition(map["position"]);
         widget.service.setAverageTime(map["averageTime"]);
-        print(map["averageTime"]);
       });
     } else {
       Navigator.pushReplacementNamed(context, '/user', arguments: widget.user);
     }
-    print(widget.service.getServiceAverageTime().toString() +
-        " and " +
-        widget.user.getUserPosition().toString());
 
     if (map["myTurn"] == 1) {
       widget.user.setMyTurn(1);
@@ -116,7 +109,6 @@ class _QueuePageState extends State<QueuePage> {
                     'sName': widget.service.getServiceName(),
                     'uId': widget.user.getUserId().toString()
                   });
-                  print(response.body);
 
                   String json = cf.resolveJson(response.body, 0);
                   Map map = jsonDecode(json);

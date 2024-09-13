@@ -23,11 +23,9 @@ class User {
       'sName': service.getServiceName(),
       'uId': "$uId",
     });
-    print(response.body);
     String json = cf.resolveJson(response.body, 0);
     Map map = jsonDecode(json);
     if (map["result"] == true) {
-      print("Queue process success");
       return true;
     }
     return false;
@@ -40,7 +38,6 @@ class User {
       'inQueue': "submited",
       'uId': "$uId",
     });
-    print("Response : " + response.body);
     String json = cf.resolveJson(response.body, 0);
     Map map = jsonDecode(json);
     if (map["result"] == true) {

@@ -27,7 +27,6 @@ class _ServicePageState extends State<ServicePage> {
       'grabServData': 'submited',
       'xcName': widget.company.getCompanySpacelessName()
     });
-    print("Request sent");
     setState(() {
       widget.company.fetchServices(response.body);
     });

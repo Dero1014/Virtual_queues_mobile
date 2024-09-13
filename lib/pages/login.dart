@@ -48,11 +48,8 @@ class Login extends StatelessWidget {
                 'username': username.text,
                 'password': password.text,
               });
-              print("sent");
-              print(response.body);
 
               if (response.body.contains("success")) {
-                print("login");
                 String json = cf.resolveJson(response.body, 0);
                 Map map = jsonDecode(json);
                 User user = new User(map["uId"], map["uName"]);
@@ -73,8 +70,6 @@ class Login extends StatelessWidget {
                   '/user',
                   arguments: user,
                 );
-              } else {
-                print("login failed");
               }
 
               username.clear();

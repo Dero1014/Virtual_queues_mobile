@@ -12,7 +12,6 @@ class Company {
 
   void fetchServices(String response) {
     var cf = CustomFunctions();
-    print(response);
     String json = cf.resolveJson(response, 0);
     Map map = jsonDecode(json);
 
@@ -100,7 +99,6 @@ class QueueListData {
 
   void fetchCompanies(String response) {
     var cf = CustomFunctions();
-    print(response);
     String json = cf.resolveJson(response, 0);
     Map map = jsonDecode(json);
 

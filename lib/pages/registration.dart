@@ -44,7 +44,6 @@ class _RegistartionState extends State<Registartion> {
                 'uEmail': email.text,
                 'uPass': password.text,
               });
-              print(response.body);
               String json = cf.resolveJson(response.body, 0);
               Map map = jsonDecode(json);
 
@@ -52,7 +51,6 @@ class _RegistartionState extends State<Registartion> {
                 setState(() {
                   visibility = true;
                 });
-                print("registered user");
               } else {
                 setState(() {
                   visibility = false;

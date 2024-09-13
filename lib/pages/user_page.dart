@@ -27,7 +27,6 @@ class UserPage extends StatelessWidget {
                   var response = await post(uri, body: {
                     'grabCompData': 'submited',
                   });
-                  print("Request sent");
 
                   queues.fetchCompanies(response.body);
 
